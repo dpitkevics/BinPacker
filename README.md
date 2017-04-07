@@ -7,3 +7,6 @@ Compile for linux on Mac OS:
 
 Compile for Mac OS on Mac OS:
 `go build github.com/dpitkevics/BoxPacker`
+
+Example on how to use this lib is found in this file:
+`https://github.com/dpitkevics/BinPacker/blob/master/src/github.com/dpitkevics/BoxPacker/main.go`
