@@ -23,20 +23,34 @@ func (packer *Packer) AddItem(item *box_item.Item) {
 	packer.items.Insert(item)
 }
 
+func (packer *Packer) SetItems(items []*box_item.Item) {
+	packer.items = box_item.NewItemList()
+
+	for _, item := range items {
+		packer.AddItem(item)
+	}
+}
+
 func (packer *Packer) AddBox(box *box.Box) {
 	packer.boxes.Insert(box)
 }
 
-func (packer *Packer) Pack() *packed_box.PackedBoxList {
-	packedBoxes, _ := packer.doVolumePack()
+func (packer *Packer) SetBoxes(boxes []*box.Box) {
+	packer.boxes = box.NewBoxList()
 
-	return packedBoxes
+	for _, boxItem := range boxes {
+		packer.AddBox(boxItem)
+	}
 }
 
-func (packer *Packer) doVolumePack() (*packed_box.PackedBoxList, error) {
+func (packer *Packer) GetBoxes() *box.BoxList {
+	return packer.boxes
+}
+
+func (packer *Packer) DoVolumePacking() (*packed_box.PackedBoxList, error) {
 	packedBoxes := packed_box.NewPackedBoxList()
 
-	for packer.items.Count() > 0 {
+	for !packer.items.IsEmpty() {
 		boxesToEvaluate := packer.boxes.Clone()
 		packedBoxesIteration := packed_box.NewPackedBoxList()
 
@@ -45,7 +59,7 @@ func (packer *Packer) doVolumePack() (*packed_box.PackedBoxList, error) {
 			volumePacker := NewVolumePacker(extractedBox, packer.items.Clone())
 			packedBox := volumePacker.Pack()
 
-			if packedBox.GetItems().Count() > 0 {
+			if !packedBox.GetItems().IsEmpty() {
 				packedBoxesIteration.Insert(packedBox)
 
 				if packedBox.GetItems().Count() == packer.items.Count() {
@@ -58,13 +72,13 @@ func (packer *Packer) doVolumePack() (*packed_box.PackedBoxList, error) {
 			return nil, errors.New("Item is too large to fit any box")
 		}
 
-		bestBox, _ := packedBoxesIteration.Top()
+		bestBox,_ := packedBoxesIteration.GetBestBox()
 		bestBoxItems := bestBox.GetItems().Clone()
 
 		unpackedItems := packer.items.Clone().Items
 		for _, packedItem := range bestBoxItems.Items {
 			for i, unpackedItem := range unpackedItems {
-				if packedItem == unpackedItem {
+				if packedItem.Id == unpackedItem.Id {
 					unpackedItems = append(unpackedItems[:i], unpackedItems[i+1:]...)
 					break
 				}
