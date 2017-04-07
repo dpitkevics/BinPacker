@@ -10,11 +10,19 @@ import (
 	"encoding/json"
 )
 
+type ErrorMessage struct {
+	Error string
+}
+
 func main() {
 	args := os.Args[1:]
 
 	if len(args) != 2 {
-		fmt.Printf("Error: not enough arguments passed")
+		errorJson, _ := json.Marshal(&ErrorMessage{
+			Error: "Not enough arguments passed to script",
+		})
+		fmt.Printf(string(errorJson))
+
 		os.Exit(0)
 	}
 
@@ -24,6 +32,10 @@ func main() {
 	boxes := make([]*box.Box, 0)
 	json.Unmarshal([]byte(boxJson), &boxes)
 
+	for _, packerBox := range boxes {
+		packerBox.RecalculateVolume()
+	}
+
 	items := make([]*box_item.Item, 0)
 	json.Unmarshal([]byte(itemJson), &items)
 
@@ -31,7 +43,16 @@ func main() {
 	packer.SetBoxes(boxes)
 	packer.SetItems(items)
 
-	packedBoxes := runner.Pack(packer)
+	packedBoxes, err := runner.Pack(packer)
+
+	if err != nil {
+		errorJson, _ := json.Marshal(&ErrorMessage{
+			Error: err.Error(),
+		})
+		fmt.Printf(string(errorJson))
+
+		os.Exit(0)
+	}
 
 	packedBoxesJson, _ := json.Marshal(packedBoxes.ToJson())
 	fmt.Printf(string(packedBoxesJson))

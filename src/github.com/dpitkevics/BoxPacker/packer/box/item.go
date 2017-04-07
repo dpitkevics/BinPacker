@@ -27,3 +27,7 @@ func NewBox(reference string, outerLength float64, outerWidth float64, outerHeig
 		MaxWeight: maxWeight,
 	}
 }
+
+func (box *Box) RecalculateVolume() {
+	box.InnerVolume = box.InnerLength * box.InnerWidth * box.InnerHeight
+}

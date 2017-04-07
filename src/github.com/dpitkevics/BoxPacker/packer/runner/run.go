@@ -6,13 +6,17 @@ import (
 	"github.com/dpitkevics/BoxPacker/packer"
 )
 
-func Pack(packer *Packer.Packer) *packed_box.PackedBoxList {
-	packedBoxes, _ := packer.DoVolumePacking()
+func Pack(packer *Packer.Packer) (*packed_box.PackedBoxList, error) {
+	packedBoxes, err := packer.DoVolumePacking()
 
-	if packedBoxes.Count() > 1 && packedBoxes.Count() < 20 {
-		redistributor := redistributor.NewWeightRedistributor(packer.GetBoxes())
-		packedBoxes = redistributor.RedistributeWeight(packedBoxes)
+	if err != nil {
+		return nil, err
 	}
 
-	return packedBoxes
+	if packedBoxes.Count() > 1 && packedBoxes.Count() < 20 {
+		weightRedistributor := redistributor.NewWeightRedistributor(packer.GetBoxes())
+		packedBoxes = weightRedistributor.RedistributeWeight(packedBoxes)
+	}
+
+	return packedBoxes, nil
 }

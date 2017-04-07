@@ -5,6 +5,7 @@ import (
 	"github.com/dpitkevics/BoxPacker/packer/box"
 	"github.com/dpitkevics/BoxPacker/packer/packed_box"
 	"errors"
+	"fmt"
 )
 
 type Packer struct {
@@ -73,7 +74,8 @@ func (packer *Packer) DoVolumePacking() (*packed_box.PackedBoxList, error) {
 		}
 
 		if packedBoxesIteration.IsEmpty() {
-			return nil, errors.New("Item is too large to fit any box")
+			topItem, _ := packer.items.Top()
+			return nil, errors.New(fmt.Sprintf("Item '%s' is too large to fit any box", topItem.Description))
 		}
 
 		bestBox,_ := packedBoxesIteration.GetBestBox()
