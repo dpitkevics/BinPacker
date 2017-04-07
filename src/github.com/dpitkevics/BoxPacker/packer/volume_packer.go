@@ -180,7 +180,7 @@ func (volumePacker *VolumePacker) findBestOrientation(item *box_item.Item, previ
 	}
 
 	if len(orientationFits) > 0 {
-		var bestKey int
+		bestKey := -1
 		bestValue := 0.0
 
 		for k, value := range orientationFits {
@@ -190,7 +190,7 @@ func (volumePacker *VolumePacker) findBestOrientation(item *box_item.Item, previ
 			}
 		}
 
-		if bestKey > 0 {
+		if bestKey >= 0 {
 			return orientationsToUse[bestKey], nil
 		}
 	}

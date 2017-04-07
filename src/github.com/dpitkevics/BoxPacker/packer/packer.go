@@ -31,6 +31,10 @@ func (packer *Packer) SetItems(items []*box_item.Item) {
 	}
 }
 
+func (packer *Packer) GetItems() *box_item.ItemList {
+	return packer.items
+}
+
 func (packer *Packer) AddBox(box *box.Box) {
 	packer.boxes.Insert(box)
 }

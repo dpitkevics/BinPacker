@@ -5,18 +5,36 @@ import (
 	"github.com/dpitkevics/BoxPacker/packer"
 	"github.com/dpitkevics/BoxPacker/packer/box"
 	"github.com/dpitkevics/BoxPacker/packer/box_item"
+	"github.com/dpitkevics/BoxPacker/packer/runner"
+	"os"
+	"encoding/json"
 )
 
 func main() {
-	packer := Packer.NewPacker()
+	args := os.Args[1:]
 
-	packer.AddBox(box.NewBox("Box 1", 32.0, 24.0, 24.0, 10, 32.0, 24.0, 24.0, 1000))
-	packer.AddBox(box.NewBox("Box 2", 32.0, 24.0, 24.0, 10, 32.0, 24.0, 24.0, 1000))
-
-	for i := 0; i < 1000; i++ {
-		packer.AddItem(box_item.NewItem(fmt.Sprintf("Item %d", i), 11.0, 7.5, 0.5, 0.2))
+	if len(args) != 2 {
+		fmt.Printf("Error: not enough arguments passed")
+		os.Exit(0)
 	}
 
-	packedBoxes := packer.Pack()
-	fmt.Printf("%+v\n", packedBoxes)
+	boxJson := args[0]
+	itemJson := args[1]
+
+	boxes := make([]*box.Box, 0)
+	json.Unmarshal([]byte(boxJson), &boxes)
+
+	items := make([]*box_item.Item, 0)
+	json.Unmarshal([]byte(itemJson), &items)
+
+	packer := Packer.NewPacker()
+	packer.SetBoxes(boxes)
+	packer.SetItems(items)
+
+	packedBoxes := runner.Pack(packer)
+
+	packedBoxesJson, _ := json.Marshal(packedBoxes.ToJson())
+	fmt.Printf(string(packedBoxesJson))
+
+	os.Exit(1)
 }

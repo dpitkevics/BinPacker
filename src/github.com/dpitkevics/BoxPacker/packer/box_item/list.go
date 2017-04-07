@@ -1,9 +1,33 @@
 package box_item
 
-import "errors"
+import (
+	"errors"
+	"sort"
+)
 
 type ItemList struct {
 	Items []*Item
+}
+
+func (itemList *ItemList) Len() int {
+	return itemList.Count()
+}
+
+func (itemList *ItemList) Less(i, j int) bool {
+	itemA := itemList.Items[i]
+	itemB := itemList.Items[j]
+
+	if itemA.Volume > itemB.Volume {
+		return true
+	} else if (itemA.Volume < itemB.Volume) {
+		return false
+	} else {
+		return (itemA.Weight - itemB.Weight) > 0
+	}
+}
+
+func (itemList *ItemList) Swap(i, j int) {
+	itemList.Items[i], itemList.Items[j] = itemList.Items[j], itemList.Items[i]
 }
 
 func NewItemList() *ItemList {
@@ -12,6 +36,8 @@ func NewItemList() *ItemList {
 
 func (itemList *ItemList) Insert(item *Item) {
 	itemList.Items = append(itemList.Items, item)
+
+	sort.Sort(itemList)
 }
 
 func (itemList *ItemList) Count() int {
@@ -46,7 +72,17 @@ func (itemList *ItemList) Top() (*Item, error) {
 
 func (itemList *ItemList) Clone() *ItemList {
 	newList := NewItemList()
-	newList.Items = itemList.Items
+
+	for _, item := range itemList.Items {
+		newList.Insert(NewItem(
+			item.Id,
+			item.Description,
+			item.Length,
+			item.Width,
+			item.Height,
+			item.Weight,
+		))
+	}
 
 	return newList
 }
