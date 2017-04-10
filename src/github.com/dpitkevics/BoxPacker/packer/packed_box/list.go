@@ -28,7 +28,7 @@ func (packedBoxList *PackedBoxList) Less(i, j int) bool {
 		choice = int(boxA.GetWeight() - boxB.GetWeight())
 	}
 
-	return choice < 0
+	return choice > 0
 }
 
 func (packedBoxList *PackedBoxList) Swap(i, j int) {

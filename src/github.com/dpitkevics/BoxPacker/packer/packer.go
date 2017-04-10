@@ -78,7 +78,7 @@ func (packer *Packer) DoVolumePacking() (*packed_box.PackedBoxList, error) {
 			return nil, errors.New(fmt.Sprintf("Item '%s' is too large to fit any box", topItem.Description))
 		}
 
-		bestBox,_ := packedBoxesIteration.GetBestBox()
+		bestBox, _ := packedBoxesIteration.GetBestBox()
 		bestBoxItems := bestBox.GetItems().Clone()
 
 		unpackedItems := packer.items.Clone().Items
