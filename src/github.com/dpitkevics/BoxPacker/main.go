@@ -39,6 +39,15 @@ func main() {
 	items := make([]*box_item.Item, 0)
 	json.Unmarshal([]byte(itemJson), &items)
 
+	if len(items) == 0 {
+		errorJson, _ := json.Marshal(&ErrorMessage{
+			Error: "No items found to pack",
+		})
+		fmt.Printf(string(errorJson))
+
+		os.Exit(0)
+	}
+
 	packer := Packer.NewPacker()
 	packer.SetBoxes(boxes)
 	packer.SetItems(items)
