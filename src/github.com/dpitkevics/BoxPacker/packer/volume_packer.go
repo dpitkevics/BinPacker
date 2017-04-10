@@ -85,7 +85,7 @@ func (volumePacker *VolumePacker) Pack() *packed_box.PackedBox {
 				volumePacker.items.Insert(itemToPack)
 
 				continue
-			} else if (volumePacker.lengthLeft < math.Min(itemToPack.Width, itemToPack.Length) || layerHeight == 0) {
+			} else if volumePacker.lengthLeft < math.Min(itemToPack.Width, itemToPack.Length) || layerHeight == 0 {
 				continue
 			}
 
