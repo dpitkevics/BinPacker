@@ -58,17 +58,17 @@ func (packedBoxList *PackedBoxList) Top() (*PackedBox, error) {
 		return nil, errors.New("No items left in list")
 	}
 
-	item := packedBoxList.PackedBoxes[packedBoxList.Count() - 1]
+	item := packedBoxList.PackedBoxes[0]
 
 	return item, nil
 }
 
 func (packedBoxList *PackedBoxList) Extract() (*PackedBox, error) {
-	if packedBoxList.Count() == 0 {
-		return nil, errors.New("No Packed boxes left in list")
-	}
+	box, err := packedBoxList.Top()
 
-	box := packedBoxList.PackedBoxes[0]
+	if err != nil {
+		return nil, err
+	}
 
 	packedBoxList.PackedBoxes = append(packedBoxList.PackedBoxes[:0], packedBoxList.PackedBoxes[1:]...)
 

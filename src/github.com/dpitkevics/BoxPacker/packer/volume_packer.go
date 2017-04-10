@@ -8,17 +8,6 @@ import (
 	"errors"
 )
 
-type Pair struct {
-	Key string
-	Value int
-}
-
-// A slice of Pairs that implements sort.Interface to sort by Value.
-type PairList []Pair
-func (p PairList) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
-func (p PairList) Len() int { return len(p) }
-func (p PairList) Less(i, j int) bool { return p[i].Value < p[j].Value }
-
 type VolumePacker struct {
 	box *box.Box
 	items *box_item.ItemList

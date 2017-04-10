@@ -19,7 +19,7 @@ func (itemList *ItemList) Less(i, j int) bool {
 
 	if itemA.Volume > itemB.Volume {
 		return true
-	} else if (itemA.Volume < itemB.Volume) {
+	} else if itemA.Volume < itemB.Volume {
 		return false
 	} else {
 		return (itemA.Weight - itemB.Weight) > 0
@@ -49,11 +49,11 @@ func (itemList *ItemList) IsEmpty() bool {
 }
 
 func (itemList *ItemList) Extract() (*Item, error) {
-	if itemList.Count() == 0 {
-		return nil, errors.New("No items left in list")
-	}
+	item, err := itemList.Top()
 
-	item := itemList.Items[0]
+	if err != nil {
+		return nil, err
+	}
 
 	itemList.Items = append(itemList.Items[:0], itemList.Items[1:]...)
 
@@ -65,7 +65,7 @@ func (itemList *ItemList) Top() (*Item, error) {
 		return nil, errors.New("No items left in list")
 	}
 
-	item := itemList.Items[itemList.Count() - 1]
+	item := itemList.Items[0]
 
 	return item, nil
 }
