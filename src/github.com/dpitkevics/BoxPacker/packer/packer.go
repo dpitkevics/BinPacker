@@ -84,7 +84,7 @@ func (packer *Packer) DoVolumePacking() (*packed_box.PackedBoxList, error) {
 		unpackedItems := packer.items.Clone().Items
 		for _, packedItem := range bestBoxItems.Items {
 			for i, unpackedItem := range unpackedItems {
-				if packedItem.Id == unpackedItem.Id {
+				if packedItem.Identifier == unpackedItem.Identifier {
 					unpackedItems = append(unpackedItems[:i], unpackedItems[i+1:]...)
 					break
 				}

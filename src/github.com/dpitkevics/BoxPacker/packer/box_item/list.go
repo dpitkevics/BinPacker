@@ -75,7 +75,7 @@ func (itemList *ItemList) Clone() *ItemList {
 
 	for _, item := range itemList.Items {
 		newList.Insert(NewItem(
-			item.Id,
+			item.Identifier,
 			item.Description,
 			item.Length,
 			item.Width,
